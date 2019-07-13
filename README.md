@@ -1,4 +1,4 @@
 # calculator
 php oop
 
-demo ajcloud.rf.gd
+demo: http://ajcloud.rf.gd/
