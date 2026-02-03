@@ -1,4 +1,4 @@
 # calculator
 php oop
 
-demo: http://ajcloud.rf.gd/calculator
+demo: https://ajlato-calculator.up.railway.app
