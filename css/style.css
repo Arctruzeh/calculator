@@ -1,0 +1,341 @@
+:root {
+    /* Nature Distilled Palette */
+    --bg-color: #F9F8F4;
+    /* Cloud Dancer */
+    --card-bg: #E8E4DF;
+    /* Clay/Stone */
+    --text-color: #463F3A;
+    /* Peat/Deep Charcoal */
+    --accent-color: #6C7A45;
+    /* Darker Sage for WCAG AA with white text */
+    --accent-hover: #566137;
+    /* Darker Sage Hover */
+    --border-color: #A8A59E;
+    /* Weathered Gray */
+    --input-bg: #F2F0EB;
+    /* Lighter Clay */
+    --error-color: #8B4A4A;
+    /* Darker Muted Red for contrast */
+
+    /* Typography */
+    --font-stack: 'Courier New', Courier, monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    /* Organic "Dappled Light" Background */
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(210, 207, 196, 0.4) 0%, transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(138, 154, 91, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 50% 80%, rgba(232, 228, 223, 0.6) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--text-color);
+    font-family: var(--font-stack);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.calc-container {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.05), -5px -5px 15px rgba(255, 255, 255, 0.5);
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+}
+
+/* Subtle paper texture effect */
+.calc-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    /* Ensure content is above texture */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="number"],
+select {
+    background-color: var(--input-bg);
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.8rem;
+    padding-right: 2.5rem;
+    /* Make room for spinners */
+    font-family: var(--font-stack);
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+input[type="number"]:focus,
+select:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    border-bottom-color: var(--accent-color);
+    background-color: #fff;
+}
+
+button {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    font-family: var(--font-stack);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button:focus {
+    outline: 2px solid var(--text-color);
+    outline-offset: 2px;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+}
+
+.output-section {
+    margin-top: 1rem;
+    min-height: 80px;
+    /* Reserve space for 2 lines of text roughly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px dashed var(--border-color);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.result-success {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.result-error {
+    color: var(--error-color);
+    font-weight: bold;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.back-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Custom Validation Styles */
+.field-error {
+    color: var(--error-color);
+    font-size: 0.8rem;
+    font-weight: bold;
+    min-height: 1.2em;
+    /* Reserve space or just let it expand */
+    margin-top: 0.2rem;
+}
+
+.input-invalid {
+    border-bottom-color: var(--error-color) !important;
+}
+
+/* Custom Select Styling */
+.custom-select-wrapper {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select {
+    position: relative;
+    font-family: var(--font-stack);
+}
+
+.select-selected {
+    background-color: var(--input-bg);
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.8rem;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.select-selected:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 1.2rem;
+    right: 1rem;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: var(--text-color) transparent transparent transparent;
+}
+
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent var(--text-color) transparent;
+    top: 0.8rem;
+}
+
+.select-items {
+    position: absolute;
+    background-color: #fff;
+    /* Clean white for contrast */
+    border: 1px solid var(--border-color);
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.select-items div {
+    color: var(--text-color);
+    padding: 0.8rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.select-items div:last-child {
+    border-bottom: none;
+}
+
+.select-items div:hover,
+.select-items div:focus {
+    background-color: var(--input-bg);
+    outline: none;
+    /* Custom background instead of outline for options, usually cleaner */
+}
+
+/* Add left border indicator for keyboard focus on items if preferred */
+.select-items div:focus {
+    border-left: 4px solid var(--accent-color);
+    padding-left: calc(0.8rem - 4px);
+}
+
+.select-hide {
+    display: none;
+}
+
+/* Custom Input Wrapper & Spinners */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Hide default browser spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    /* Firefox */
+}
+
+.spinner-controls {
+    position: absolute;
+    right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.spinner-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.6rem;
+    padding: 0;
+    margin: 0;
+    color: var(--text-color);
+    box-shadow: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    line-height: 1;
+}
+
+.spinner-btn:hover {
+    opacity: 1;
+    background: none;
+    color: var(--accent-hover);
+}
+
+.spinner-btn:focus {
+    outline: none;
+    /* Removed outline for cleaner look, they are small targets */
+}
