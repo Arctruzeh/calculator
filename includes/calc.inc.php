@@ -1,37 +1,30 @@
 <?php
+declare(strict_types=1);
 
-class Calc {
-    
-    public $num1;
-    public $num2;
-    public $cal;
-    
-    public function __construct($num1, $num2, $cal) {
-        $this->num1 = $num1;
-        $this->num2 = $num2;
-        $this->cal = $cal;
+enum Operation: string
+{
+    case Add = '+';
+    case Subtract = '-';
+    case Multiply = '*';
+    case Divide = '/';
+}
+
+class Calc
+{
+    public function __construct(
+        public readonly int|float $num1,
+        public readonly int|float $num2,
+        public readonly Operation $cal
+    ) {
     }
-    
-    public function calcMethod() {
-        switch ($this->cal) {
-            case 'add':
-                $result = $this->num1 + $this->num2;
-                break;
-            case 'sub':
-                $result = $this->num1 - $this->num2;
-                break;
-            case 'mul':
-                $result = $this->num1 * $this->num2;
-                break;
-            case 'div':
-                $result = $this->num1 / $this->num2;
-                break;
-                
-            default:
-                $result = "Error";
-                break;
-        }
-        return $result;
+
+    public function calcMethod(): int|float|string
+    {
+        return match ($this->cal) {
+            Operation::Add => $this->num1 + $this->num2,
+            Operation::Subtract => $this->num1 - $this->num2,
+            Operation::Multiply => $this->num1 * $this->num2,
+            Operation::Divide => ($this->num2 == 0) ? "Error: Cannot divide by zero" : $this->num1 / $this->num2,
+        };
     }
-    
 }
