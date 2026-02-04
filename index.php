@@ -1,66 +1,95 @@
+<?php
+declare(strict_types=1);
+include 'includes/calc.inc.php';
+
+$num1 = '';
+$num2 = '';
+$cal = '';
+$result = null;
+$error = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $num1 = $_POST['num1'] ?? '';
+    $num2 = $_POST['num2'] ?? '';
+    $cal = $_POST['cal'] ?? '';
+
+    if (!is_numeric($num1) || !is_numeric($num2)) {
+        $error = "Please enter valid numbers.";
+    } else {
+        $operation = Operation::tryFrom($cal);
+        if ($operation === null) {
+            $error = "Invalid operation selected.";
+        } else {
+            $calculator = new Calc((float) $num1, (float) $num2, $operation);
+            $result = $calculator->calcMethod();
+            // Check for division by zero error string from class
+            if (is_string($result) && str_starts_with($result, 'Error:')) {
+                $error = $result;
+                $result = null;
+            }
+        }
+    }
+}
+?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
 </head>
 
 <body>
-    <form action="calc.php" method="POST" id="calcForm">
-        <input type="text" name="num1">
-        <input type="text" name="num2">
-        <select name="cal">
-            <option value="+">Add (+)</option>
-            <option value="-">Subtract (-)</option>
-            <option value="*">Multiply (*)</option>
-            <option value="/">Divide (/)</option>
-        </select>
+    <h1>Simple Calculator</h1>
+
+    <form action="" method="POST">
+        <div>
+            <label for="num1">First Number:</label>
+            <input type="number" name="num1" id="num1" step="any" required placeholder="e.g. 10"
+                value="<?php echo htmlspecialchars((string) $num1); ?>" autofocus>
+        </div>
+        <br>
+        <div>
+            <label for="cal">Operation:</label>
+            <select name="cal" id="cal">
+                <option value="+" <?php if ($cal === '+')
+                    echo 'selected'; ?>>Add (+)</option>
+                <option value="-" <?php if ($cal === '-')
+                    echo 'selected'; ?>>Subtract (-)</option>
+                <option value="*" <?php if ($cal === '*')
+                    echo 'selected'; ?>>Multiply (*)</option>
+                <option value="/" <?php if ($cal === '/')
+                    echo 'selected'; ?>>Divide (/)</option>
+            </select>
+        </div>
+        <br>
+        <div>
+            <label for="num2">Second Number:</label>
+            <input type="number" name="num2" id="num2" step="any" required placeholder="e.g. 5"
+                value="<?php echo htmlspecialchars((string) $num2); ?>">
+        </div>
+        <br>
         <button type="submit">Calculate</button>
     </form>
-    
-    <div id="result-container" style="margin-top: 20px; font-weight: bold;"></div>
 
-    <script>
-        document.getElementById('calcForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const resultContainer = document.getElementById('result-container');
-            
-            fetch('calc.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    resultContainer.innerText = 'Result: ' + data.result;
-                    resultContainer.style.color = 'black';
-                } else {
-                    resultContainer.innerText = data.message;
-                    resultContainer.style.color = 'red';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                resultContainer.innerText = 'An unexpected error occurred.';
-                resultContainer.style.color = 'red';
-            });
-        });
-    </script>
+    <hr>
 
-    <script data-slug="calculator">
-        (function () {
-            var slug = document.currentScript.getAttribute('data-slug');
-            var link = document.createElement('a');
-            link.href = 'https://ajlato.com/projects/' + slug;
-            link.innerHTML = '← Back to Portfolio';
-            link.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #222; color: #fff; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-family: system-ui, sans-serif; font-size: 14px; z-index: 10000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;';
-            link.onmouseover = function () { link.style.transform = 'scale(1.05)'; };
-            link.onmouseout = function () { link.style.transform = 'scale(1)'; };
-            document.body.appendChild(link);
-        })();
-    </script>
+    <?php if ($result !== null): ?>
+        <h2>Result:
+            <?php echo htmlspecialchars((string) $result); ?>
+        </h2>
+    <?php endif; ?>
+
+    <?php if ($error !== null): ?>
+        <h2 style="color: red;">
+            <?php echo htmlspecialchars($error); ?>
+        </h2>
+    <?php endif; ?>
+
+    <br><br>
+    <a href="https://ajlato.com/projects/calculator">← Back to Portfolio</a>
+
 </body>
 
 </html>
