@@ -4,9 +4,11 @@ A simple, strictly typed object-oriented calculator built with modern PHP 8 feat
 
 ## Features
 - **Modern PHP**: Utilizes PHP 8.1+ features including **Enums**, **Readonly Properties**, `match` expressions, **Constructor Property Promotion**, and **Union Types**.
+- **Start-of-the-art UI/UX**: Features a beautiful, accessible design with custom spinners and select dropdowns, fully responsive and optimized for mobile.
 - **Server Side Rendering**: Uses pure HTML and PHP for a robust, dependency-free experience.
 - **Strict Typing**: Enforces `strict_types=1` for robust code quality.
 - **Security**: Implements input validation and XSS sanitization.
+- **Client-side Validation**: Provides immediate feedback to users before submission.
 - **OOP Design**: Logic is encapsulated within a reusable `Calc` class.
 
 ## How to Run Locally
